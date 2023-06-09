@@ -1,0 +1,25 @@
+<!-- face_rec_and_mark_attend.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Face Recognition</title>
+</head>
+
+<body>
+    <h1>Face Recognition Result</h1>
+    <p>Recognized Name: {{ recognized_name }}</p>
+    <p>File Name: <span id="file_name"></span></p>
+    <script>
+        // Get the query parameters from the URL
+        const queryParams = new URLSearchParams(window.location.search);
+
+        // Get the value of the 'file_name' parameter
+        const fileName = queryParams.get('file_name');
+
+        // Update the HTML content with the file name
+        document.getElementById('file_name').textContent = fileName;
+    </script>
+</body>
+
+</html>

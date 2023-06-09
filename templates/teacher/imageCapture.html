@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Camera Capture</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        .container {
+            width: 640px;
+            height: 480px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #video {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        #capture-btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Attendance Dashboard</a>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="container text-center">
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <video id="video" autoplay></video>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mt-3">
+                        <div class="col-md-12">
+                            <button id="capture-btn" class="btn btn-primary">Capture Photo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add hidden input fields to store the captured data -->
+    <form id="capture-form" action="/capture" method="POST">
+        <input type="hidden" id="department-input" name="department">
+        <input type="hidden" id="year-input" name="year">
+        <input type="hidden" id="class-input" name="class">
+        <input type="hidden" id="captured-photo" name="photo">
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script>
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                var video = document.getElementById('video');
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function(err) {
+                console.log('Error accessing camera: ', err);
+            });
+    
+        var captureButton = document.getElementById('capture-btn');
+        captureButton.addEventListener('click', function() {
+            var video = document.getElementById('video');
+    
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            var imageData = canvas.toDataURL('image/jpeg');
+    
+            // Set the captured photo data to the hidden input field
+            var capturedPhotoInput = document.getElementById('captured-photo');
+            capturedPhotoInput.value = imageData;
+    
+            // Set the values of the hidden input fields before submitting the form
+            var departmentInput = document.getElementById('department-input');
+            var yearInput = document.getElementById('year-input');
+            var classInput = document.getElementById('class-input');
+            
+            var urlParams = new URLSearchParams(window.location.search);
+            departmentInput.value = urlParams.get('department');
+            yearInput.value = urlParams.get('year');
+            classInput.value = urlParams.get('class');
+    
+            // Submit the form
+            var captureForm = document.getElementById('capture-form');
+            captureForm.submit();
+        });
+    </script>
+    
+</body>
+
+</html>

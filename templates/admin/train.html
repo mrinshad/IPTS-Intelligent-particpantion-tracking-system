@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Train Face</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <style>
+        .progress-container {
+            width: 100%;
+            height: 20px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #333;
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="train-container">
+        <h1>Train Face</h1>
+        <div class="train-form">
+            <form id="train-form" method="POST" action="/train">
+                <div class="form-group">
+                    <label for="admission-no">Admission No:</label>
+                    <input type="text" id="admission-no" name="admission-no" placeholder="Enter your admission number"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" placeholder="Enter your age">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select class="form-control" id="gender" name="gender">
+                        <option value="">Select your gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="department">Department:</label>
+                    <select class="form-control" id="department" name="department" onchange="updateYears()">
+                        <option value="">Select a department</option>
+                        <option value="CS">Computer Science</option>
+                        <option value="CE">Civil</option>
+                        <option value="ME">Mechanical</option>
+                        <option value="EEE">EEE</option>
+                        <option value="EC">EC</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="year">Year:</label>
+                    <select class="form-control" id="year" name="year" onchange="updateDivisions()">
+                        <option value="">Select a year</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="division">Class:</label>
+                    <select class="form-control" id="division" name="division">
+                        <option value="">Select a class</option>
+                    </select>
+                </div>
+
+                <button type="submit">Start Training</button>
+                <div class="progress-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <p id="status" class="hidden">Please wait while we take some pictures...</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- <script src="../static/script.js"></script> -->
+    <script>
+        var divisions = {
+        "CS": {
+            "First Year": ["CSE", "DS","AIML"],
+            "Second Year": ["CSE", "DS"],
+            "Third Year": ["CSE", "DS"],
+            "Fourth Year": ["CSE"]
+        },
+        "CE": {
+            "First Year": ["C-A","C-B"],
+            "Second Year": ["C-A","C-B"],
+            "Third Year":  ["C-A","C-B"],
+            "Fourth Year":  ["C-A","C-B"]
+        },
+        "ME": {
+            "First Year": ["M1","M2"],
+            "Second Year":  ["M1","M2"],
+            "Third Year":  ["M1","M2"],
+            "Fourth Year": ["M1","M2"]
+        },
+        "EEE": {
+            "First Year": ["E1","E2","E3"],
+            "Second Year": ["E1","E2","E3"],
+            "Third Year": ["E1","E2","E3"],
+            "Fourth Year": ["E1","E2","E3"]
+        },
+        "EC": {
+            "First Year": ["EC1","EC2"],
+            "Second Year": ["EC1","EC2"],
+            "Third Year": ["EC1","EC2"],
+            "Fourth Year": ["EC1","EC2"]
+        }
+    };
+
+    function updateYears() {
+        var departmentSelect = document.getElementById("department");
+        var yearSelect = document.getElementById("year");
+        var department = departmentSelect.value;
+
+        // Clear existing options
+        yearSelect.innerHTML = '<option value="">Select a year</option>';
+
+        if (department !== "") {
+            var years = Object.keys(divisions[department]);
+
+            // Add options for each year
+            for (var i = 0; i < years.length; i++) {
+                var option = document.createElement("option");
+                option.value = years[i];
+                option.text = years[i];
+                yearSelect.appendChild(option);
+            }
+        }
+    }
+
+    function updateDivisions() {
+    var departmentSelect = document.getElementById("department");
+    var yearSelect = document.getElementById("year");
+    var divisionSelect = document.getElementById("division");
+    var department = departmentSelect.value;
+    var year = yearSelect.value;
+
+    // Clear existing options
+    divisionSelect.innerHTML = '<option value="">Select a class</option>';
+
+    if (department !== "" && year !== "") {
+        var classes = divisions[department][year];
+
+        // Add options for selected department and year
+        for (var i = 0; i < classes.length; i++) {
+            var option = document.createElement("option");
+            option.value = classes[i];
+            option.text = classes[i];
+            
+            // Set custom value for the option
+            var value = department + ' ' + classes[i]; // Modify the value as desired
+            option.setAttribute("value", value);
+            
+            divisionSelect.appendChild(option);
+        }
+    }
+}
+
+    </script>
+</body>
+
+</html>

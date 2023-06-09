@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance System</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Attendance System</h1>
+        <p>Welcome to the Attendance System. Please select an option:</p>
+        <div class="buttons">
+            <a href="{{ url_for('train_page') }}" class="btn">Start Training</a>
+            <a href="{{ url_for('markAttendance') }}" class="btn">Mark Attendance</a>
+        </div>
+    </div>
+</body>
+</html>
