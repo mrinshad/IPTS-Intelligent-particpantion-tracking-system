@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Teacher Management System - View Teachers</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    .navbar {
+      background-color: #343a40;
+    }
+
+    .navbar-brand,
+    .navbar-nav .nav-link {
+      color: #ffffff;
+    }
+
+    .navbar-brand:hover,
+    .navbar-nav .nav-link:hover {
+      color: #e9ecef;
+    }
+
+    .container {
+      margin-top: 50px;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    th {
+      background-color: #343a40;
+      color: #ffffff;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+    }
+    /* Custom logout button style */
+    .logout-btn {
+      color: #ffffff;
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .logout-btn:hover {
+      color: #ffffff;
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+
+    /* Custom logout button design */
+    .logout-btn {
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  </style>
+  <script>
+    function logout() {
+      // Clear browser history
+      window.location.replace("/");
+      if (typeof history.pushState === "function") {
+        history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+          history.go(1);
+        };
+      }
+    }
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark">
+    <a class="navbar-brand" href="#">Teacher Management System</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link " href="admin-dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="add-teacher">Add Teacher</a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link active" href="view-teachers">View Teachers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link logout-btn" href="#" onclick="logout();">Logout</a>
+          </li>
+        </ul>
+      </div>
+  </nav>
+
+  <div class="container">
+    <h2 class="text-center mt-4">View Teachers</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+            <th>Teacher ID</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Major</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for teacher in teachers %}
+                <tr>
+                    <td>{{ teacher[0] }}</td>
+                    <td>{{ teacher[1] }}</td>
+                    <td>{{ teacher[2] }}</td>
+                    <td>{{ teacher[3] }}</td>
+                    <td>{{ teacher[4] }}</td>
+                </tr>
+                {% endfor %}
+        <!-- Add more rows dynamically from the database -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -109,8 +109,11 @@ def markAttendance():
 
 @app.route('/train_page', methods=['GET', 'POST'])
 def train_page():
-    return render_template('admin/train.html')
+    return render_template('admin/adminLogin.html')
 
+@app.route('/trainfaces')
+def train_faces():
+    return render_template('admin/train.html')
 
 @app.route('/train', methods=['GET', 'POST'])
 def train():
@@ -158,12 +161,13 @@ def capture():
 
 @app.route('/recognize')
 def recognize():
-    test_image_path = request.args.get('file_name')
+    # test_image_path = request.args.get('file_name')
+    test_image_path = "20230610_140123.jpg"
     department = request.args.get('department')
     year = request.args.get('year')
     class_ = request.args.get('class_')
     
-    dataset_folder = 'dataset/' + year + "/" + department + "/" + class_
+    dataset_folder = 'dataset/' + year + "/" + department + "/" + department + " " +class_
     print(dataset_folder)
 
     # Load the known face images and their corresponding names from the dataset
@@ -193,14 +197,18 @@ def recognize():
     face_locations = face_recognition.face_locations(test_image)
     face_encodings = face_recognition.face_encodings(test_image, face_locations)
 
+    recognized_names = []
+
+    recognized_names = []
+
     for face_encoding in face_encodings:
-        print("===============im here=============")
+        print("===============  FACE OBTAINED =============")
         # Compare the face encoding with the known face encodings
         matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
         name = 'Unknown'
 
         if face_encodings:
-            encoding = face_encodings[0]
+            encoding = face_encoding
         else:
             # Handle the case when no face is detected in the image
             print("No face detected in the image")
@@ -212,9 +220,20 @@ def recognize():
             best_match_index = min(range(len(face_distances)), key=face_distances.__getitem__)
             name = known_face_names[best_match_index]
 
+        # Remove dot and following number from the name
+        name_parts = name.rsplit('.', 1)
+        name = name_parts[0]
+
         # Print the recognized face name
         print("Recognized face:", name)
-    return render_template('teacher/face_rec_and_mark_attend.html', recognized_name=name)
+
+        recognized_names.append(name)
+
+    print("Recognized names:", recognized_names)
+
+
+    return render_template('teacher/face_rec_and_mark_attend.html', recognized_names=recognized_names)
+
     
 
 @app.route('/photo/<file_name>')
@@ -228,8 +247,11 @@ def show_photo(file_name):
 @app.route('/capturephoto')
 def capturePhotoNav():
     return render_template('teacher/imageCapture.html')
-#   LOGIN SECTION TEACHER
-# -----------------
+
+
+####################################################################################################################################
+                                                                # DATABASE
+
 
 app.secret_key = '1222'
 
@@ -251,7 +273,8 @@ def test_connection():
         return f"Database connection failed. Error: {str(e)}"
     
 
-# Login section
+#   LOGIN SECTION TEACHER
+# -----------------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -270,7 +293,88 @@ def login():
     
     return render_template('login.html')
 
+#       Register names(attendance)
+@app.route('/register', methods=['POST'])
+def register():
+    names = request.form.getlist('name')  # Get the list of recognized names from the form
+    print(type(names)," : ",names)
+    return "Name registered successfully!"
 
+
+# admin -> section
+
+# login
+@app.route('/admin-login', methods=['GET', 'POST'])
+def adminlogin():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        if username == 'admin' and password == 'root':
+            return redirect(url_for('admin_dashboard'))
+        else:
+            error = 'Invalid username or password. Please try again.'
+            return render_template('admin/adminLogin.html', error=error)
+
+    return render_template('adminDashboard.html')
+
+@app.route('/admin-dashboard')
+def admin_dashboard():
+    
+    cursor = mysql.connection.cursor()
+    # Fetch data from the database
+    cursor.execute("SELECT COUNT(*) FROM students")
+    total_students = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM teachers")
+    total_teachers = cursor.fetchone()[0]
+
+    # cursor.execute("SELECT COUNT(*) FROM staffs")
+    total_staffs = 12
+
+    # Pass the data to the template
+    return render_template('admin/adminDashboard.html', total_students=total_students, total_teachers=total_teachers, total_staffs=total_staffs)
+
+
+@app.route('/add-teacher')
+def add_teacher():
+    # Render the add_teacher template
+    return render_template('admin/add_teacher.html')
+
+@app.route('/addTeacher', methods=['POST'])
+def addTeacher():
+    name = request.form['name']
+    username = request.form['username']
+    password = request.form['password']
+    major = request.form['major']
+
+    # Create a cursor to interact with the database
+    cursor = mysql.connection.cursor()
+
+    # Execute the SQL query to insert the new teacher
+    query = "INSERT INTO teachers (name, username, password, major) VALUES (%s, %s, %s, %s)"
+    values = (name, username, password, major)
+    cursor.execute(query, values)
+
+    # Commit the transaction to save the changes
+    mysql.connection.commit()
+
+    # Close the cursor
+    cursor.close()
+
+    # Return a JSON response with the success message
+    return jsonify({'message': 'Teacher added successfully!'})
+
+# Route for viewing teachers
+@app.route('/view-teachers')
+def view_teachers():
+    # Query to get all teachers
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM teachers")
+    teachers = cursor.fetchall()
+    
+    # Render the view_teachers template with the teacher data
+    return render_template('admin/view_teachers.html', teachers=teachers)
 
 if __name__ == '__main__':
     app.run(debug=True)

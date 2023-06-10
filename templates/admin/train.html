@@ -20,12 +20,30 @@
             border-radius: 5px;
             transition: width 0.5s ease-in-out;
         }
+
+        .home-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .home-button img {
+            width: 30px;
+            height: auto;
+        }
     </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 
 <body>
     <div class="train-container">
+        <button class="home-button">
+            <i class="fa-regular fa-house"></i>Home
+        </button>
         <h1>Train Face</h1>
         <div class="train-form">
             <form id="train-form" method="POST" action="/train">
@@ -61,21 +79,18 @@
                         <option value="EC">EC</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
                     <label for="year">Year:</label>
                     <select class="form-control" id="year" name="year" onchange="updateDivisions()">
                         <option value="">Select a year</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
                     <label for="division">Class:</label>
                     <select class="form-control" id="division" name="division">
                         <option value="">Select a class</option>
                     </select>
                 </div>
-
                 <button type="submit">Start Training</button>
                 <div class="progress-container">
                     <div id="progress-bar" class="progress-bar"></div>
@@ -88,87 +103,93 @@
     <!-- <script src="../static/script.js"></script> -->
     <script>
         var divisions = {
-        "CS": {
-            "First Year": ["CSE", "DS","AIML"],
-            "Second Year": ["CSE", "DS"],
-            "Third Year": ["CSE", "DS"],
-            "Fourth Year": ["CSE"]
-        },
-        "CE": {
-            "First Year": ["C-A","C-B"],
-            "Second Year": ["C-A","C-B"],
-            "Third Year":  ["C-A","C-B"],
-            "Fourth Year":  ["C-A","C-B"]
-        },
-        "ME": {
-            "First Year": ["M1","M2"],
-            "Second Year":  ["M1","M2"],
-            "Third Year":  ["M1","M2"],
-            "Fourth Year": ["M1","M2"]
-        },
-        "EEE": {
-            "First Year": ["E1","E2","E3"],
-            "Second Year": ["E1","E2","E3"],
-            "Third Year": ["E1","E2","E3"],
-            "Fourth Year": ["E1","E2","E3"]
-        },
-        "EC": {
-            "First Year": ["EC1","EC2"],
-            "Second Year": ["EC1","EC2"],
-            "Third Year": ["EC1","EC2"],
-            "Fourth Year": ["EC1","EC2"]
-        }
-    };
+            "CS": {
+                "First Year": ["CSE", "DS", "AIML"],
+                "Second Year": ["CSE", "DS"],
+                "Third Year": ["CSE", "DS"],
+                "Fourth Year": ["CSE"]
+            },
+            "CE": {
+                "First Year": ["C-A", "C-B"],
+                "Second Year": ["C-A", "C-B"],
+                "Third Year": ["C-A", "C-B"],
+                "Fourth Year": ["C-A", "C-B"]
+            },
+            "ME": {
+                "First Year": ["M1", "M2"],
+                "Second Year": ["M1", "M2"],
+                "Third Year": ["M1", "M2"],
+                "Fourth Year": ["M1", "M2"]
+            },
+            "EEE": {
+                "First Year": ["E1", "E2", "E3"],
+                "Second Year": ["E1", "E2", "E3"],
+                "Third Year": ["E1", "E2", "E3"],
+                "Fourth Year": ["E1", "E2", "E3"]
+            },
+            "EC": {
+                "First Year": ["EC1", "EC2"],
+                "Second Year": ["EC1", "EC2"],
+                "Third Year": ["EC1", "EC2"],
+                "Fourth Year": ["EC1", "EC2"]
+            }
+        };
 
-    function updateYears() {
-        var departmentSelect = document.getElementById("department");
-        var yearSelect = document.getElementById("year");
-        var department = departmentSelect.value;
+        function updateYears() {
+            var departmentSelect = document.getElementById("department");
+            var yearSelect = document.getElementById("year");
+            var department = departmentSelect.value;
 
-        // Clear existing options
-        yearSelect.innerHTML = '<option value="">Select a year</option>';
+            // Clear existing options
+            yearSelect.innerHTML = '<option value="">Select a year</option>';
 
-        if (department !== "") {
-            var years = Object.keys(divisions[department]);
+            if (department !== "") {
+                var years = Object.keys(divisions[department]);
 
-            // Add options for each year
-            for (var i = 0; i < years.length; i++) {
-                var option = document.createElement("option");
-                option.value = years[i];
-                option.text = years[i];
-                yearSelect.appendChild(option);
+                // Add options for each year
+                for (var i = 0; i < years.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = years[i];
+                    option.text = years[i];
+                    yearSelect.appendChild(option);
+                }
             }
         }
-    }
 
-    function updateDivisions() {
-    var departmentSelect = document.getElementById("department");
-    var yearSelect = document.getElementById("year");
-    var divisionSelect = document.getElementById("division");
-    var department = departmentSelect.value;
-    var year = yearSelect.value;
+        function updateDivisions() {
+            var departmentSelect = document.getElementById("department");
+            var yearSelect = document.getElementById("year");
+            var divisionSelect = document.getElementById("division");
+            var department = departmentSelect.value;
+            var year = yearSelect.value;
 
-    // Clear existing options
-    divisionSelect.innerHTML = '<option value="">Select a class</option>';
+            // Clear existing options
+            divisionSelect.innerHTML = '<option value="">Select a class</option>';
 
-    if (department !== "" && year !== "") {
-        var classes = divisions[department][year];
+            if (department !== "" && year !== "") {
+                var classes = divisions[department][year];
 
-        // Add options for selected department and year
-        for (var i = 0; i < classes.length; i++) {
-            var option = document.createElement("option");
-            option.value = classes[i];
-            option.text = classes[i];
-            
-            // Set custom value for the option
-            var value = department + ' ' + classes[i]; // Modify the value as desired
-            option.setAttribute("value", value);
-            
-            divisionSelect.appendChild(option);
+                // Add options for selected department and year
+                for (var i = 0; i < classes.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = classes[i];
+                    option.text = classes[i];
+
+                    // Set custom value for the option
+                    var value = department + ' ' + classes[i]; // Modify the value as desired
+                    option.setAttribute("value", value);
+
+                    divisionSelect.appendChild(option);
+                }
+            }
         }
-    }
-}
 
+        // Home button click event handler
+        var homeButton = document.querySelector(".home-button");
+        homeButton.addEventListener("click", function () {
+            // Redirect to home page
+            window.location.href = "/admin-dashboard";
+        });
     </script>
 </body>
 

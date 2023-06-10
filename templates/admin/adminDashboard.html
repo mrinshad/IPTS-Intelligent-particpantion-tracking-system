@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Teacher Management System - Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    .navbar {
+      background-color: #343a40;
+    }
+
+    .navbar-brand,
+    .navbar-nav .nav-link {
+      color: #ffffff;
+    }
+
+    .navbar-brand:hover,
+    .navbar-nav .nav-link:hover {
+      color: #e9ecef;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+    }
+
+    .card {
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      background-color: #343a40;
+      color: #ffffff;
+    }
+
+    .card-body {
+      background-color: #f8f9fa;
+    }
+
+    .card-title {
+      font-size: 20px;
+    }
+
+    .card-text {
+      font-size: 18px;
+    }
+
+    /* Custom logout button style */
+    .logout-btn {
+      color: #ffffff;
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .logout-btn:hover {
+      color: #ffffff;
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+
+    /* Custom logout button design */
+    .logout-btn {
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+  </style>
+  <script>
+    function logout() {
+      // Clear browser history
+      window.location.replace("/");
+      if (typeof history.pushState === "function") {
+        history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+          history.go(1);
+        };
+      }
+    }
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark">
+    <a class="navbar-brand" href="#">Teacher Management System</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="admin-dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="add-teacher">Add Teacher</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="view-teachers">View Teachers</a>
+        </li>
+        <!-- Logout button -->
+        <li class="nav-item">
+          <a class="nav-link logout-btn" href="#" onclick="logout();">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2 class="text-center mt-4">Dashboard</h2>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Total Students</h5>
+          </div>
+          <div class="card-body">
+            <h3 class="card-text">{{ total_students }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Total Teachers</h5>
+          </div>
+          <div class="card-body">
+            <h3 class="card-text">{{ total_teachers }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Total Staffs</h5>
+          </div>
+          <div class="card-body">
+            <h3 class="card-text">{{ total_staffs }}</h3>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title">College Name</h5>
+      </div>
+      <div class="card-body">
+        <h3 class="card-text">Mar Athanaius College of engineering</h3>
+      </div>
+    </div>
+    <h4 class="text-center mt-4">Click the button below to register a student and start training faces!</h4>
+    <div class="text-center">
+        <a href="{{ url_for('train_faces') }}" class="btn btn-primary btn-lg">Train the system</a>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>

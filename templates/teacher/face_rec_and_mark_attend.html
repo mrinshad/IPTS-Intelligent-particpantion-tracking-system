@@ -8,8 +8,19 @@
 
 <body>
     <h1>Face Recognition Result</h1>
-    <p>Recognized Name: {{ recognized_name }}</p>
+    <h2>Recognized Names:</h2>
+    {% for name in recognized_names %}
+        <p>Recognized Name: {{ name }}</p>
+    {% endfor %}
     <p>File Name: <span id="file_name"></span></p>
+
+    <form method="POST" action="/register">
+        {% for name in recognized_names %}
+            <input type="hidden" name="name" value="{{ name }}">
+        {% endfor %}
+        <input type="submit" value="Register">
+    </form>
+
     <script>
         // Get the query parameters from the URL
         const queryParams = new URLSearchParams(window.location.search);
