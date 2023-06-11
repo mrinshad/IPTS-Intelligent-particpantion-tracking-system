@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Teacher Attendance Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    body {
+      padding-top: 70px; /* Add top padding to make space for the fixed navbar */
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: center; /* Align items horizontally at the center */
+    }
+
+    .container {
+      margin-top: 20px; /* Add top margin to create space below the navbar */
+    }
+
+    .logout-btn {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: #fff;
+    }
+
+    .logout-btn:hover,
+    .logout-btn:focus {
+      background-color: #c82333;
+      border-color: #bd2130;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">Attendance Dashboard</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">View Students</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Status</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn logout-btn" href="#">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <div class="container">
+    <form action="/capturephoto">
+    <h2 class="text-center mb-4">Teacher Attendance Dashboard</h2>
+    <div class="form-group">
+      <label for="department">Department:</label>
+      <select class="form-control" id="department" name="department" onchange="updateYears()">
+        <option value="">Select a department</option>
+        <option value="CS">Computer Science</option>
+        <option value="CE">Civil</option>
+        <option value="ME">Mechanical</option>
+        <option value="EEE">EEE</option>
+        <option value="EC">EC</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="year">Year:</label>
+      <select class="form-control" id="year" name="year" onchange="updateDivisions()" disabled>
+        <option value="">Select a year</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="class">Class:</label>
+      <select class="form-control" id="class" name="class" disabled>
+        <option value="">Select a class</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block" >Proceed</button>
+  </form>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+  <script>
+    // JavaScript code here...
+    var divisions = {
+      "CS": {
+        "First Year": ["CSE", "DS", "AIML"],
+        "Second Year": ["CSE", "DS"],
+        "Third Year": ["CSE", "DS"],
+        "Fourth Year": ["CSE"]
+      },
+      "CE": {
+        "First Year": ["C-A", "C-B"],
+        "Second Year": ["C-A", "C-B"],
+        "Third Year": ["C-A", "C-B"],
+        "Fourth Year": ["C-A", "C-B"]
+      },
+      "ME": {
+        "First Year": ["M1", "M2"],
+        "Second Year": ["M1", "M2"],
+        "Third Year": ["M1", "M2"],
+        "Fourth Year": ["M1", "M2"]
+      },
+      "EEE": {
+        "First Year": ["E1", "E2", "E3"],
+        "Second Year": ["E1", "E2", "E3"],
+        "Third Year": ["E1", "E2", "E3"],
+        "Fourth Year": ["E1", "E2", "E3"]
+      },
+      "EC": {
+        "First Year": ["EC1", "EC2"],
+        "Second Year": ["EC1", "EC2"],
+        "Third Year": ["EC1", "EC2"],
+        "Fourth Year": ["EC1", "EC2"]
+      }
+    };
+
+    function updateYears() {
+      var departmentSelect = document.getElementById("department");
+      var yearSelect = document.getElementById("year");
+      var classSelect = document.getElementById("class");
+      var markAttendanceBtn = document.getElementById("markAttendanceBtn");
+      var department = departmentSelect.value;
+
+      // Clear existing options
+      yearSelect.innerHTML = '<option value="">Select a year</option>';
+      classSelect.innerHTML = '<option value="">Select a class</option>';
+
+      if (department !== "") {
+        var years = Object.keys(divisions[department]);
+
+        // Add options for each year
+        for (var i = 0; i < years.length; i++) {
+          var option = document.createElement("option");
+          option.value = years[i];
+          option.text = years[i];
+          yearSelect.appendChild(option);
+        }
+
+        yearSelect.disabled = false;
+      } else {
+        yearSelect.disabled = true;
+      }
+
+      classSelect.disabled = true;
+      markAttendanceBtn.disabled = true;
+    }
+
+    function updateDivisions() {
+      var yearSelect = document.getElementById("year");
+      var classSelect = document.getElementById("class");
+      var markAttendanceBtn = document.getElementById("markAttendanceBtn");
+      var department = document.getElementById("department").value;
+      var year = yearSelect.value;
+
+      // Clear existing options
+      classSelect.innerHTML = '<option value="">Select a class</option>';
+
+      if (department !== "" && year !== "") {
+        var classes = divisions[department][year];
+
+        // Add options for selected department and year
+        for (var i = 0; i < classes.length; i++) {
+          var option = document.createElement("option");
+          option.value = classes[i];
+          option.text = classes[i];
+          classSelect.appendChild(option);
+        }
+
+        classSelect.disabled = false;
+        markAttendanceBtn.disabled = false;
+      } else {
+        classSelect.disabled = true;
+        markAttendanceBtn.disabled = true;
+      }
+    }
+
+    function markAttendance() {
+      var department = document.getElementById("department").value;
+      var year = document.getElementById("year").value;
+      var classr = document.getElementById("class").value;
+
+      if (department === "" || year === "" || classr === "") {
+        alert("Please select a department, year, and class.");
+      } else {
+        // Perform attendance marking logic here
+        alert("Attendance marked for " + department + " " + year + " " + classr + ".");
+      }
+    }
+  </script>
+</body>
+</html>
