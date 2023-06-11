@@ -8,48 +8,32 @@ IPTS (Intelligent Participant Tracking System) uses facial recognition to accura
 
 Follow these steps to install and set up the project:
 
-1. Clone the repository:
-<pre>
-   ```shell
-   git clone https://github.com/mrinshad/IPTS-Intelligent-particpantion-tracking-system.git
-</pre>
-
-Certainly! Here's an enhanced version of the README file, formatted with Markdown to maximize its visual appeal on GitHub:
-
-markdown
-
-# IPTS - Intelligent Participant Tracking System
-
-![IPTS Logo](path/to/logo.png)
-
-## Description
-
-IPTS (Intelligent Participant Tracking System) uses facial recognition to accurately monitor and track individuals in real-time for enhanced security and efficient participant management.
-
-## Installation
-
-Follow these steps to install and set up the project:
-
 0. Clone the repository:
 
 <pre>
-   ```shell
-   git clone <repository_url>
-   ```
+```shell
+
+git clone https://github.com/mrinshad/IPTS-Intelligent-particpantion-tracking-system.git
+
+```
 </pre>
 
 1. Navigate to the project directory:
 <pre>
-    ```shell
-    cd project_directory
-    ```
+```shell
+
+cd project_directory
+
+```
 </pre>
 
 2. Create a virtual environment (optional but recommended):
 
 <pre>
 ```shell
-    python -m venv env
+
+python -m venv env
+
 ```
 </pre>
 
@@ -57,22 +41,28 @@ Follow these steps to install and set up the project:
 
     For Windows:
 <pre>
-    ```shell
-    .\env\Scripts\activate
-    ```
+```shell
+
+.\env\Scripts\activate
+
+```
 </pre>
 
 For macOS and Linux:
 <pre>
-    ```shell
-    source env/bin/activate
-    ```
+```shell
+
+source env/bin/activate
+
+```
 </pre>
 4.Install the required packages:
 
 <pre>
 ```shell
+
 pip install -r requirements.txt
+
 ```
 </pre>
 
@@ -85,7 +75,8 @@ This command will install all the necessary packages and their dependencies.
 <pre>
 ```shell
 
-    python main.py
+python main.py
+
 ```
 </pre>
 
