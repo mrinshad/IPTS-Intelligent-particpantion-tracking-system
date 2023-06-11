@@ -9,9 +9,10 @@ IPTS (Intelligent Participant Tracking System) uses facial recognition to accura
 Follow these steps to install and set up the project:
 
 1. Clone the repository:
-
+<pre>
    ```shell
    git clone https://github.com/mrinshad/IPTS-Intelligent-particpantion-tracking-system.git
+</pre>
 
 Certainly! Here's an enhanced version of the README file, formatted with Markdown to maximize its visual appeal on GitHub:
 
@@ -31,40 +32,49 @@ Follow these steps to install and set up the project:
 
 0. Clone the repository:
 
+<pre>
    ```shell
    git clone <repository_url>
+   ```
+</pre>
 
 1. Navigate to the project directory:
-
+<pre>
     ```shell
-
-cd project_directory
+    cd project_directory
+    ```
+</pre>
 
 2. Create a virtual environment (optional but recommended):
 
+<pre>
 ```shell
-
-python -m venv env
+    python -m venv env
+```
+</pre>
 
 3.Activate the virtual environment (skip this step if not using a virtual environment):
 
     For Windows:
-
+<pre>
     ```shell
-
-.\env\Scripts\activate
+    .\env\Scripts\activate
+    ```
+</pre>
 
 For macOS and Linux:
-
-```shell
-
+<pre>
+    ```shell
     source env/bin/activate
-
+    ```
+</pre>
 4.Install the required packages:
 
+<pre>
 ```shell
-
 pip install -r requirements.txt
+```
+</pre>
 
 This command will install all the necessary packages and their dependencies.
 
@@ -72,11 +82,12 @@ This command will install all the necessary packages and their dependencies.
 
 5. Run the project:
 
+<pre>
 ```shell
 
     python main.py
-
-    [Add any additional commands or steps necessary to run the project]
+```
+</pre>
 
 6. Access the project in your web browser:
 Open your preferred web browser and visit http://localhost:5000 or the appropriate URL or port specified in your project.
@@ -97,12 +108,3 @@ If you encounter any issues during the installation or setup process, try the fo
 
 If the above steps do not resolve the issue, please contact the project maintainers for further assistance.
 License
-
-[Add your project license information here]
-
-vbnet
-
-
-You can replace `path/to/logo.png` with the actual path to your project's logo image or remove the logo line if you don't have one.
-
-Remember to customize the README file by adding your specific details, such as the project name, logo, and license information.
