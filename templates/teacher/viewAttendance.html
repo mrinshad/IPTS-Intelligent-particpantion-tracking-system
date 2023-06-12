@@ -1,20 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Teacher Attendance Dashboard</title>
+  <title>View Attendance</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <style>
     body {
       padding-top: 70px; /* Add top padding to make space for the fixed navbar */
-    }
-
-    .navbar {
-      display: flex;
-      justify-content: center; /* Align items horizontally at the center */
-    }
-
-    .container {
-      margin-top: 20px; /* Add top margin to create space below the navbar */
     }
 
     .logout-btn {
@@ -29,7 +20,45 @@
       border-color: #bd2130;
       color: #fff;
     }
+
+    .btn-absent {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: #fff;
+    }
+
+    .btn-absent:hover,
+    .btn-absent:focus {
+      background-color: #c82333;
+      border-color: #bd2130;
+      color: #fff;
+    }
+
+    .btn-present {
+      background-color: #28a745;
+      border-color: #28a745;
+      color: #fff;
+    }
+
+    .btn-present:hover,
+    .btn-present:focus {
+      background-color: #218838;
+      border-color: #1e7e34;
+      color: #fff;
+    }
   </style>
+  <script>
+    function logout() {
+      // Clear browser history
+      window.location.replace("/markAttendance");
+      if (typeof history.pushState === "function") {
+        history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+          history.go(1);
+        };
+      }
+    }
+  </script>
 </head>
 <body>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -40,22 +69,54 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <a class="nav-link" href="navigateToDashboard">Dashboard</a>
+          <a class="nav-link" href="navigateToDashboard">Dashboard</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="navigateToViewStudents">View Attendance</a>
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link" href="#">Status</a>
-        </li> -->
         <li class="nav-item">
-          <a class="nav-link btn logout-btn" href="#">Logout</a>
+          <a class="nav-link btn logout-btn" href="#" onclick="logout();">Logout</a>
         </li>
       </ul>
     </div>
   </nav>
-  
-  
 
-  </body>
-  </html>
+  <div class="container mt-5">
+    <h2>Attendance Details</h2>
+    <table class="table table-bordered mt-3">
+      <thead class="thead-dark">
+        <tr>
+          <th>Admission Number</th>
+          <th>Student Name</th>
+          <th>Attendance Status</th>
+          <th>Update Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for attendance in attendances %}
+        <tr>
+          <td>{{ attendance.ad_no }}</td>
+          <td>{{ attendance.student_name }}</td>
+          <td>{{ attendance.attendance_status }}</td>
+          <td>
+            <form action="/updateAttendance" method="post">
+              <input type="hidden" name="ad_no" value="{{ attendance.ad_no }}">
+              <input type="hidden" name="attendance_status" value="{{ attendance.attendance_status }}">
+              {% if attendance.attendance_status == 'Present' %}
+                <button type="submit" class="btn btn-present">Mark Absent</button>
+              {% else %}
+                <button type="submit" class="btn btn-absent">Mark Present</button>
+              {% endif %}
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>

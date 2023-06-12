@@ -3,7 +3,7 @@ import sys
 import numpy as np
 from PIL import Image
 import os
-from flask import Flask, render_template, request, Response, jsonify, redirect, url_for,session
+from flask import Flask, render_template, request, Response, jsonify, redirect, url_for,session,flash
 from flask_mysqldb import MySQL
 import base64
 import datetime
@@ -30,7 +30,7 @@ def train_face(name,admissionNo,age,gender,department,year,classr):
     
     # Check if the video capture device is opened successfully
     if not video_capture.isOpened():
-        print("Error: Failed to open video capture device")
+        #print("Error: Failed to open video capture device")
         return
 
     count = 0
@@ -41,9 +41,7 @@ def train_face(name,admissionNo,age,gender,department,year,classr):
     folder_path = os.path.join('dataset', year, department, classr, admissionNo)
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-        print("Folder created successfully.")
-    else:
-        print("Folder already exists.")
+        #print("Folder created successfully.")
 
 
     while count < 15:
@@ -53,7 +51,7 @@ def train_face(name,admissionNo,age,gender,department,year,classr):
             capture_attempts += 1
 
             if capture_attempts > max_capture_attempts:
-                print("Error: Maximum capture attempts reached")
+                #print("Error: Maximum capture attempts reached")
                 break
 
             continue
@@ -128,7 +126,7 @@ def train():
         year = request.form.get('year')
         classr = request.form.get('division')
         id = train_face(name,admissionNo,age,gender,department,year,classr)
-        print("Face trained with name =", request.form.get('name')," and admission number = ",request.form.get('admission-no'))
+        #print("Face trained with name =", request.form.get('name')," and admission number = ",request.form.get('admission-no'))
         return render_template('admin/train.html')
 
 @app.route('/teacherDashboard')
@@ -174,7 +172,7 @@ def recognize():
     class_ = request.args.get('class_')
     
     dataset_folder = 'dataset/' + year + "/" + department + "/" + department + " " +class_
-    print(dataset_folder)
+    #print(dataset_folder)
 
     # Load the known face images and their corresponding names from the dataset
     known_face_encodings = []
@@ -206,7 +204,7 @@ def recognize():
     recognized_names = []
 
     for face_encoding in face_encodings:
-        print("===============  FACE OBTAINED =============")
+        #print("===============  FACE OBTAINED =============")
         # Compare the face encoding with the known face encodings
         matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
         name = 'Unknown'
@@ -215,7 +213,7 @@ def recognize():
             encoding = face_encoding
         else:
             # Handle the case when no face is detected in the image
-            print("No face detected in the image")
+            #print("No face detected in the image")
             continue
 
         if True in matches:
@@ -228,15 +226,15 @@ def recognize():
         name_parts = name.rsplit('.', 1)
         name = name_parts[0]
 
-        # Print the recognized face name
-        print("Recognized face:", name)
+        # #print the recognized face name
+        #print("Recognized face:", name)
 
         recognized_names.append(name)
 
-    print("Recognized names:", recognized_names)
+    #print("Recognized names:", recognized_names)
     absent_names = tuple({name.rsplit('.', 1)[0] for name in known_face_names} - set(recognized_names))
 
-    print("Missing names:", absent_names)
+    #print("Missing names:", absent_names)
 
 
     return render_template('teacher/face_rec_and_mark_attend.html', recognized_names=recognized_names,absent_names = absent_names)
@@ -262,15 +260,46 @@ def add_teacher():
 
 @app.route('/navigateToViewStudents')
 def navigateToViewStudents():
-    # Render the add_teacher template
-    return render_template('teacher/viewAttendance.html')
+    att_id = session.get('att_id')
+    student_details = []
+    with mysql.connection.cursor() as cur:
+        query = "SELECT students.ad_no, students.name, attendance.att_status FROM students INNER JOIN attendance ON students.ad_no = attendance.ad_no WHERE attendance.att_id = %s;"
+        cur.execute(query, (att_id,))
+        rows = cur.fetchall()
+        for row in rows:
+            ad_no = row[0]
+            student_name = row[1]
+            attendance_status = "Present" if row[2] else "Absent"
+            student_details.append({"ad_no": ad_no, "student_name": student_name, "attendance_status": attendance_status})
+
+    return render_template('teacher/viewAttendance.html', attendances=student_details)
 
 @app.route('/navigateToDashboard')
 def navigateToDashboard():
     # Render the add_teacher template
     username = session.get('username')
-    print("username =",username)
-    return render_template('teacher/teacherDashboard.html',username=username)
+    teacherName = session.get('teacherName')
+    # #print("username =",username)
+    cursor = mysql.connection.cursor()
+    # Retrieve the attendance data from the database using att_id from session
+    att_id = session.get('att_id')
+    query = "SELECT COUNT(*) AS total_count, SUM(CASE WHEN att_status = 'Absent' THEN 1 ELSE 0 END) AS absent_count, (SUM(CASE WHEN att_status = 'Present' THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS present_percentage FROM attendance WHERE att_id = %s"
+    cursor.execute(query, (att_id,))
+
+    # Fetch the result
+    result = cursor.fetchone()
+
+    # Close the cursor and database connection
+    cursor.close()
+
+    # Retrieve the absent count and present percentage from the result
+    absent_count = result[1]
+    present_percentage = result[2]
+    present_percentage = int(present_percentage)
+
+    #print(f"Absent Count: {absent_count}")
+    #print(f"Present Percentage: {present_percentage}%")
+    return render_template('teacher/teacherDashboard.html', username=username, teacherName=teacherName, absent_count=absent_count, present_percentage=present_percentage)
 
 ####################################################################################################################################
                                                                 # DATABASE
@@ -311,7 +340,7 @@ def login():
         if user:
             session['username'] = user[0]
             session['teacherName'] = user[1]
-            print("user = ", user[1])
+            #print("user = ", user[1])
             return redirect('/teacherDashboard')
         else:
             error = 'Invalid credentials. Please try again.'
@@ -323,7 +352,6 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     names = request.form.getlist('name')  # Get the list of recognized names from the form
-    print(type(names)," : ",names)
     return "Name registered successfully!"
 
 
@@ -396,7 +424,6 @@ def view_teachers():
     # Render the view_teachers template with the teacher data
     return render_template('admin/view_teachers.html', teachers=teachers)
 
-#done viewing attendance oveerview
 @app.route('/doneViewing', methods=['POST'])
 def doneViewing():
     if request.method == 'POST':
@@ -415,7 +442,6 @@ def doneViewing():
         else:
             year = "4"
         username = session.get('username')
-        teacherName = session.get('teacherName')
         current_date = date.today()
         studentsAdNo = []
 
@@ -440,13 +466,14 @@ def doneViewing():
                 return "No such teacher"
 
             # Insert data into attendance_records table
-            att_id = str(uuid.uuid4())  # Generate a unique ID for attendance record
-            query = "INSERT INTO attendance_record (att_id, date, year, dept_id, cl_id, teacher_id) VALUES (%s, %s, %s, %s, %s, %s);"
-            cur.execute(query, (att_id, current_date, year, dept_id, class_id, teach_id))
+            query = "INSERT INTO attendance_record (date, year, dept_id, cl_id, teacher_id) VALUES (%s, %s, %s, %s, %s);"
+            cur.execute(query, (current_date, year, dept_id, class_id, teach_id))
 
+            att_id = cur.lastrowid  # Get the auto-incremented attendance ID
+            session['att_id'] = att_id
             # Insert data into attendance table for present students
             for name in names:
-                print("student name = ", name)
+                #print("student name = ", name)
                 query = "SELECT ad_no FROM students WHERE name = %s AND dept_id = %s AND year = %s;"
                 cur.execute(query, (name, dept_id, year))
                 row = cur.fetchone()
@@ -460,7 +487,7 @@ def doneViewing():
 
             # Insert data into attendance table for absent students
             for name in absent_names:
-                print("absent student name = ", name)
+                #print("absent student name = ", name)
                 query = "SELECT ad_no FROM students WHERE name = %s AND dept_id = %s AND year = %s;"
                 cur.execute(query, (name, dept_id, year))
                 row = cur.fetchone()
@@ -475,10 +502,36 @@ def doneViewing():
             mysql.connection.commit()
 
         # username = session.get('username')
-        print("students ad_no =", studentsAdNo)
-        return render_template('teacher/teacherDashboard.html', teacherName=teacherName)
+        #print("students ad_no =", studentsAdNo)
+        return redirect(url_for('navigateToDashboard'))
 
     return "Invalid request method"
+
+@app.route('/updateAttendance', methods=['POST'])
+def updateAttendance():
+    if request.method == 'POST':
+        ad_no = request.form.get('ad_no')
+        #print(ad_no)
+        attendance_status = request.form.get('attendance_status')
+
+        # Update the attendance status based on the current status
+        if attendance_status == 'Present':
+            new_status = '0'
+        else:
+            new_status = '1'
+
+        # Perform the update operation in the database
+        with mysql.connection.cursor() as cur:
+            query = "UPDATE attendance SET att_status = %s WHERE ad_no = %s;"
+            cur.execute(query, (new_status, ad_no))
+            mysql.connection.commit()
+
+        flash('Attendance status updated successfully.')
+        return redirect(url_for('navigateToViewStudents'))
+
+    return "Invalid request method"
+
+
 
 
 if __name__ == '__main__':

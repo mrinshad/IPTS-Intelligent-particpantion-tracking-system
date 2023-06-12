@@ -27,17 +27,12 @@
                     <thead>
                         <tr>
                             <th class="px-4 py-2">Name</th>
-                            <th class="px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for name in recognized_names %}
                         <tr>
                             <td class="border px-4 py-2">{{ name }}</td>
-                            <td class="border px-4 py-2">
-                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded"
-                                    @click="markAsAbsent(name)">Mark as Absent</button>
-                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -49,17 +44,12 @@
                     <thead>
                         <tr>
                             <th class="px-4 py-2">Name</th>
-                            <th class="px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for name in absent_names %}
                         <tr>
                             <td class="border px-4 py-2">{{ name }}</td>
-                            <td class="border px-4 py-2">
-                                <button class="bg-green-500 hover:bg-green-700 text-white font-semibold py-1 px-2 rounded"
-                                    @click="markAsPresent(name)">Mark as Present</button>
-                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -78,38 +68,6 @@
                 class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded float-right"
                 x-show="selectedItems.length > 0">
         </form>
-        <script>
-            const app = () => ({
-                recognized_names: [],
-                absent_names: [],
-
-                init() {
-                    this.recognized_names = JSON.parse('{{ recognized_names | tojson | safe }}');
-                    this.absent_names = JSON.parse('{{ absent_names | tojson | safe }}');
-                },
-
-                markAsAbsent(name) {
-                    const index = this.recognized_names.indexOf(name);
-                    if (index !== -1) {
-                        this.recognized_names.splice(index, 1);
-                        this.absent_names.push(name);
-                    }
-                },
-
-                markAsPresent(name) {
-                    const index = this.absent_names.indexOf(name);
-                    if (index !== -1) {
-                        this.absent_names.splice(index, 1);
-                        this.recognized_names.push(name);
-                    }
-                },
-            });
-
-            window.addEventListener('DOMContentLoaded', () => {
-                app().init();
-            });
-        </script>
-
     </main>
 
 </body>

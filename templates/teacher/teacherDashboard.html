@@ -30,6 +30,18 @@
       color: #fff;
     }
   </style>
+  <script>
+    function logout() {
+      // Clear browser history
+      window.location.replace("/markAttendance");
+      if (typeof history.pushState === "function") {
+        history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+          history.go(1);
+        };
+      }
+    }
+  </script>
 </head>
 <body>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -49,7 +61,7 @@
           <a class="nav-link" href="#">Status</a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link btn logout-btn" href="#">Logout</a>
+          <a class="nav-link btn logout-btn" href="#" onclick="logout();">Logout</a>
         </li>
       </ul>
     </div>
@@ -65,9 +77,8 @@
         <div class="card">
           <div class="card-header">Attendance Statistics</div>
           <div class="card-body">
-            <p>Overall Attendance: 80%</p>
-            <p>Today's Attendance: 90%</p>
-            <p>Recent Absences: 5</p>
+            <p>Today's Attendance: {{ present_percentage  }}%</p>
+            <p>Recent Absences: {{ absent_count }}</p>
           </div>
         </div>
       </div>

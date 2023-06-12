@@ -8,63 +8,63 @@ IPTS (Intelligent Participant Tracking System) uses facial recognition to accura
 
 Follow these steps to install and set up the project:
 
-1. Clone the repository:
-
-   ```shell
-   git clone https://github.com/mrinshad/IPTS-Intelligent-particpantion-tracking-system.git
-
-Certainly! Here's an enhanced version of the README file, formatted with Markdown to maximize its visual appeal on GitHub:
-
-markdown
-
-# IPTS - Intelligent Participant Tracking System
-
-![IPTS Logo](path/to/logo.png)
-
-## Description
-
-IPTS (Intelligent Participant Tracking System) uses facial recognition to accurately monitor and track individuals in real-time for enhanced security and efficient participant management.
-
-## Installation
-
-Follow these steps to install and set up the project:
-
 0. Clone the repository:
 
-   ```shell
-   git clone <repository_url>
+<pre>
+```shell
+
+git clone https://github.com/mrinshad/IPTS-Intelligent-particpantion-tracking-system.git
+
+```
+</pre>
 
 1. Navigate to the project directory:
-
-    ```shell
+<pre>
+```shell
 
 cd project_directory
 
+```
+</pre>
+
 2. Create a virtual environment (optional but recommended):
 
+<pre>
 ```shell
 
 python -m venv env
 
+```
+</pre>
+
 3.Activate the virtual environment (skip this step if not using a virtual environment):
 
     For Windows:
-
-    ```shell
+<pre>
+```shell
 
 .\env\Scripts\activate
 
-For macOS and Linux:
+```
+</pre>
 
+For macOS and Linux:
+<pre>
 ```shell
 
-    source env/bin/activate
+source env/bin/activate
 
+```
+</pre>
 4.Install the required packages:
 
+<pre>
 ```shell
 
 pip install -r requirements.txt
+
+```
+</pre>
 
 This command will install all the necessary packages and their dependencies.
 
@@ -72,11 +72,13 @@ This command will install all the necessary packages and their dependencies.
 
 5. Run the project:
 
+<pre>
 ```shell
 
-    python main.py
+python main.py
 
-    [Add any additional commands or steps necessary to run the project]
+```
+</pre>
 
 6. Access the project in your web browser:
 Open your preferred web browser and visit http://localhost:5000 or the appropriate URL or port specified in your project.
@@ -97,12 +99,3 @@ If you encounter any issues during the installation or setup process, try the fo
 
 If the above steps do not resolve the issue, please contact the project maintainers for further assistance.
 License
-
-[Add your project license information here]
-
-vbnet
-
-
-You can replace `path/to/logo.png` with the actual path to your project's logo image or remove the logo line if you don't have one.
-
-Remember to customize the README file by adding your specific details, such as the project name, logo, and license information.
