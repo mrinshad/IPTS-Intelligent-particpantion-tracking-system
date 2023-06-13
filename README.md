@@ -10,37 +10,30 @@ Follow these steps to install and set up the project:
 
 0. Clone the repository:
 
-<pre>
-    git clone https://github.com/mrinshad/IPTS-Intelligent-particpantion-tracking-system.git
-</pre>
+       git clone https://github.com/mrinshad/IPTS-Intelligent-particpantion-tracking-system.git
 
 1. Navigate to the project directory:
-<pre>
-    cd project_directory
-</pre>
+
+       cd project_directory
 
 2. Create a virtual environment (optional but recommended):
 
-<pre>
-    python -m venv env
-</pre>
+
+       python -m venv env
 
 3.Activate the virtual environment (skip this step if not using a virtual environment):
 
-    For Windows:
-<pre>
+For Windows:
+
     .\env\Scripts\activate
-</pre>
 
 For macOS and Linux:
-<pre>
-    source env/bin/activate
-</pre>
+
+     source env/bin/activate
+
 4.Install the required packages:
 
-<pre>
     pip install -r requirements.txt
-</pre>
 
 This command will install all the necessary packages and their dependencies.
 
@@ -48,9 +41,8 @@ This command will install all the necessary packages and their dependencies.
 
 5. Run the project:
 
-<pre>
-    python main.py
-</pre>
+       python main.py
+
 
 6. Access the project in your web browser:
 Open your preferred web browser and visit http://localhost:5000 or the appropriate URL or port specified in your project.
