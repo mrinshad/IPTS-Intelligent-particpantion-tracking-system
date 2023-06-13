@@ -29,11 +29,24 @@
       border-color: #bd2130;
       color: #fff;
     }
+
+    .mark-attendance-btn {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+    }
+
+    .mark-attendance-btn:hover,
+    .mark-attendance-btn:focus {
+      background-color: #0056b3;
+      border-color: #0056b3;
+      color: #fff;
+    }
   </style>
   <script>
     function logout() {
       // Clear browser history
-      window.location.replace("/markAttendance");
+      window.location.replace("/mark_attendance");
       if (typeof history.pushState === "function") {
         history.pushState(null, null, window.location.href);
         window.onpopstate = function () {
@@ -52,7 +65,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="navigateToDashboard">Dashboard</a>
+          <a class="nav-link" href="#">Dashboard</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="navigateToViewStudents">View Attendance</a>
@@ -61,8 +74,11 @@
           <a class="nav-link" href="#">Status</a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link btn logout-btn" href="#" onclick="logout();">Logout</a>
+          <form action="/logout-teacher" method="POST">
+            <button type="submit" class="nav-link btn logout-btn">Logout</button>
+          </form>
         </li>
+        
       </ul>
     </div>
   </nav>
@@ -72,17 +88,28 @@
       <div class="col-md-6">
         <h2>Welcome, {{ teacherName }} Teacher</h2>
         <p>Here, you can manage the attendance of your students.</p>
+        {% if 'att_id' in session %}
+          <button class="btn btn-primary mark-attendance-btn" disabled>Attendance Marked</button>
+        {% else %}
+          <a class="btn btn-primary mark-attendance-btn" href="/teacherSelectClass">Mark Attendance</a>
+        {% endif %}
       </div>
       <div class="col-md-6">
         <div class="card">
           <div class="card-header">Attendance Statistics</div>
           <div class="card-body">
-            <p>Today's Attendance: {{ present_percentage  }}%</p>
-            <p>Recent Absences: {{ absent_count }}</p>
+            {% if session['att_id'] %}
+              <p>Today's Attendance: {{ present_percentage }}%</p>
+              <p>Recent Absences: {{ absent_count }}</p>
+            {% else %}
+              <p>Attendance not marked</p>
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
+  </div>
+  
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

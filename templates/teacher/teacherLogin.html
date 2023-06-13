@@ -2,12 +2,9 @@
 <html>
 <head>
     <title>Teacher Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
         }
@@ -19,6 +16,8 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             max-width: 400px;
             width: 100%;
+            margin: 0 auto;
+            margin-top: 100px;
         }
         
         h1 {
@@ -48,7 +47,7 @@
             padding: 10px;
             border-radius: 5px;
             border: none;
-            background-color: #4caf50;
+            background-color: #007bff;
             color: #fff;
             font-size: 16px;
             text-align: center;
@@ -56,11 +55,15 @@
         }
         
         .btn-login:hover {
-            background-color: #45a049;
+            background-color: #57a3f5;
         }
     </style>
 </head>
 <body>
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="/"> < Back to Home</a>
+    </nav>
+
     <div class="container">
         <h1>Teacher Login</h1>
         <form action="/login" method="POST">
@@ -72,8 +75,10 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn-login">Login</button>
+            <button type="submit" class="btn btn-primary btn-login">Login</button>
         </form>
     </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 </html>

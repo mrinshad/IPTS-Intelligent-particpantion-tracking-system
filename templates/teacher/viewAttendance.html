@@ -62,7 +62,7 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">Attendance Dashboard</a>
+    <a class="navbar-brand" href="navigateToDashboard">Attendance Dashboard</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -72,10 +72,13 @@
           <a class="nav-link" href="navigateToDashboard">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="navigateToViewStudents">View Attendance</a>
+          <a class="nav-link" href="#">View Attendance</a>
         </li>
+        
         <li class="nav-item">
-          <a class="nav-link btn logout-btn" href="#" onclick="logout();">Logout</a>
+          <form action="/logout-teacher" method="POST">
+            <button type="submit" class="nav-link btn logout-btn">Logout</button>
+          </form>
         </li>
       </ul>
     </div>

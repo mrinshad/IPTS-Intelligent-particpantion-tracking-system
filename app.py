@@ -129,11 +129,16 @@ def train():
         #print("Face trained with name =", request.form.get('name')," and admission number = ",request.form.get('admission-no'))
         return render_template('admin/train.html')
 
-@app.route('/teacherDashboard')
-def teacherDashboard():
+@app.route('/teacherSelectClass')
+def teacherSelectClass():
     # Render the teacher dashboard template
     return render_template('teacher/teacherSelectClass.html')
 
+@app.route('/logout-teacher', methods = ['POST'])
+def logoutTeacher():
+    # Clear the session
+    session.clear()
+    return render_template('teacher/teacherLogin.html')
 
 #RECOGNITION CODE
 @app.route('/capture', methods=['POST'])
@@ -204,7 +209,7 @@ def recognize():
     recognized_names = []
 
     for face_encoding in face_encodings:
-        #print("===============  FACE OBTAINED =============")
+        print("===============  FACE OBTAINED =============")
         # Compare the face encoding with the known face encodings
         matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
         name = 'Unknown'
@@ -213,7 +218,7 @@ def recognize():
             encoding = face_encoding
         else:
             # Handle the case when no face is detected in the image
-            #print("No face detected in the image")
+            print("No face detected in the image")
             continue
 
         if True in matches:
@@ -226,15 +231,15 @@ def recognize():
         name_parts = name.rsplit('.', 1)
         name = name_parts[0]
 
-        # #print the recognized face name
-        #print("Recognized face:", name)
+        # print the recognized face name
+        print("Recognized face:", name)
 
         recognized_names.append(name)
 
-    #print("Recognized names:", recognized_names)
+    print("Recognized names:", recognized_names)
     absent_names = tuple({name.rsplit('.', 1)[0] for name in known_face_names} - set(recognized_names))
 
-    #print("Missing names:", absent_names)
+    print("Missing names:", absent_names)
 
 
     return render_template('teacher/face_rec_and_mark_attend.html', recognized_names=recognized_names,absent_names = absent_names)
@@ -260,7 +265,10 @@ def add_teacher():
 
 @app.route('/navigateToViewStudents')
 def navigateToViewStudents():
+    if 'username' not in session:
+        return render_template('teacher/teacherLogin.html')
     att_id = session.get('att_id')
+    print('attendance id =',att_id)
     student_details = []
     with mysql.connection.cursor() as cur:
         query = "SELECT students.ad_no, students.name, attendance.att_status FROM students INNER JOIN attendance ON students.ad_no = attendance.ad_no WHERE attendance.att_id = %s;"
@@ -276,30 +284,33 @@ def navigateToViewStudents():
 
 @app.route('/navigateToDashboard')
 def navigateToDashboard():
-    # Render the add_teacher template
+    if 'username' not in session:
+        return render_template('teacher/teacherLogin.html')
+
     username = session.get('username')
     teacherName = session.get('teacherName')
-    # #print("username =",username)
+
     cursor = mysql.connection.cursor()
-    # Retrieve the attendance data from the database using att_id from session
-    att_id = session.get('att_id')
-    query = "SELECT COUNT(*) AS total_count, SUM(CASE WHEN att_status = 'Absent' THEN 1 ELSE 0 END) AS absent_count, (SUM(CASE WHEN att_status = 'Present' THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS present_percentage FROM attendance WHERE att_id = %s"
-    cursor.execute(query, (att_id,))
 
-    # Fetch the result
-    result = cursor.fetchone()
+    if 'att_id' in session:
+        att_id = session.get('att_id')
+        query = "SELECT COUNT(*) AS total_count, SUM(CASE WHEN att_status = 'Absent' THEN 1 ELSE 0 END) AS absent_count, (SUM(CASE WHEN att_status = 'Present' THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS present_percentage FROM attendance WHERE att_id = %s"
+        cursor.execute(query, (att_id,))
 
-    # Close the cursor and database connection
+        result = cursor.fetchone()
+
+        absent_count = result[1]
+        present_percentage = result[2]
+        present_percentage = int(present_percentage)
+        # print('workingggggg')
+    else:
+        absent_count = 0
+        present_percentage = 0
+
     cursor.close()
 
-    # Retrieve the absent count and present percentage from the result
-    absent_count = result[1]
-    present_percentage = result[2]
-    present_percentage = int(present_percentage)
-
-    #print(f"Absent Count: {absent_count}")
-    #print(f"Present Percentage: {present_percentage}%")
-    return render_template('teacher/teacherDashboard.html', username=username, teacherName=teacherName, absent_count=absent_count, present_percentage=present_percentage)
+    return render_template('teacher/teacherDashboard.html', username=username, teacherName=teacherName,
+                           absent_count=absent_count, present_percentage=present_percentage)
 
 ####################################################################################################################################
                                                                 # DATABASE
@@ -341,7 +352,7 @@ def login():
             session['username'] = user[0]
             session['teacherName'] = user[1]
             #print("user = ", user[1])
-            return redirect('/teacherDashboard')
+            return redirect('/navigateToDashboard')
         else:
             error = 'Invalid credentials. Please try again.'
             return render_template('login.html', error=error)
@@ -471,6 +482,7 @@ def doneViewing():
 
             att_id = cur.lastrowid  # Get the auto-incremented attendance ID
             session['att_id'] = att_id
+            print("att_id = ",att_id)
             # Insert data into attendance table for present students
             for name in names:
                 #print("student name = ", name)
@@ -535,4 +547,4 @@ def updateAttendance():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) 
