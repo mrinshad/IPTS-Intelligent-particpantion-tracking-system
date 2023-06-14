@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Attendance System</title>
@@ -14,4 +14,127 @@
         </div>
     </div>
 </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- <link rel="stylesheet" type="text/css" href="mainstyle.css"> -->
+    <style>
+        /* FIRST PAGE */
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url(../static/unnamed.jpg);
+            background-size: cover;
+        }
+
+        .container {
+            width: 941px;
+            height: 30%;
+            background-color: #35B6F2;
+            position: absolute;
+            top: 350px;
+
+        }
+
+        .heading {
+            background-color: #fff;
+            position: absolute;
+            top: 163px;
+            margin-top: 0px;
+            width: 941px;
+            height: 220px;
+            border-radius: 20px 20px;
+        }
+
+        .heading .heading-1 {
+            /* font-family: sans-serif; */
+            margin-left: 13%;
+            font-size: 44px;
+            position: relative;
+            top: 17px;
+            margin-bottom: 5px;
+        }
+
+        .heading .heading-2 {
+            /* font-family: sans-serif; */
+            position: relative;
+            top: -11px;
+            color: RED;
+            margin-left: 24%;
+            font-size: 44px;
+
+        }
+
+        .container .para {
+            padding: 10px;
+            color: white;
+            font-family: monospace;
+            margin-top: 2px;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .container .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .container button {
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .container .primary-button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            position: relative;
+            top: 33px;
+            left: 307px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #299e08;
+            color: white;
+            border: 15px;
+        }
+
+        .container .secondary-button {
+            padding: 10px 20px;
+            position: relative;
+            top: 34px;
+            left: -305px;
+            margin: 0 10px;
+            font-size: 16px;
+            background-color: #299e08;
+            color: #fff;
+            border: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="heading">
+        <h1 class="heading-1">SMART INTELIGENT </h1>
+        <h1 class="heading-2">PARTICIPATING SYSTEM</h1>
+
+    </div>
+    <div class="container">
+        <p class="para">Smart attendance is an automated system that uses advanced technology to track attendance
+            accurately and in real-time, replacing manual processes. It streamlines attendance management and provides
+            reliable monitoring and reporting.
+        <div class="buttons">
+            
+            <a href="{{ url_for('train_page') }}" style = "text-decoration: none;" class="primary-button">Admin Login</a>
+            <a href="{{ url_for('markAttendance') }}" style = "text-decoration: none;" class="secondary-button">Teacher Login</a>
+        </div>
+    </div>
+</body>
+
 </html>

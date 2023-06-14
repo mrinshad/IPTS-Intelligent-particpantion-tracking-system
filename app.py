@@ -19,75 +19,111 @@ count = 0
 
 app = Flask(__name__)
 # init_db(app)
+app.secret_key = '1222'
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'ipts'
+mysql = MySQL(app)
 
 def generate_id():
     existing_ids = [int(file.split(".")[2]) for file in os.listdir("dataset") if file.endswith(".jpg") and len(file.split(".")) >= 3]
     new_id = max(existing_ids) + 1 if existing_ids else 1
     return new_id
 
-def train_face(name,admissionNo,age,gender,department,year,classr):
-    video_capture = cv2.VideoCapture(0)  # Adjust the video source index if needed
-    
-    # Check if the video capture device is opened successfully
-    if not video_capture.isOpened():
-        #print("Error: Failed to open video capture device")
-        return
+def train_face(name, admissionNo, age, gender, department, year1, classr):
+    # Retrieve the dept_id and cl_id from the department table
 
-    count = 0
-    max_capture_attempts = 5
-    capture_attempts = 0
+    with mysql.connection.cursor() as cursor:
+        query = "SELECT dept_id, cl_id FROM department WHERE className = %s"
+        cursor.execute(query, (classr,))
+        result = cursor.fetchone()
 
-    # Create the new folder within the "dataset" folder
-    folder_path = os.path.join('dataset', year, department, classr, admissionNo)
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path)
-        #print("Folder created successfully.")
+        if result:
+            dept_id, cl_id = result
 
+            video_capture = cv2.VideoCapture(0)  # Adjust the video source index if needed
 
-    while count < 15:
-        ret, frame = video_capture.read()
+            # Check if the video capture device is opened successfully
+            if not video_capture.isOpened():
+                # print("Error: Failed to open video capture device")
+                return
 
-        if not ret:
-            capture_attempts += 1
+            count = 0
+            max_capture_attempts = 5
+            capture_attempts = 0
 
-            if capture_attempts > max_capture_attempts:
-                #print("Error: Maximum capture attempts reached")
-                break
+            # Create the new folder within the "dataset" folder
+            folder_path = os.path.join('dataset', year1, department, classr, admissionNo)
+            if not os.path.exists(folder_path):
+                os.makedirs(folder_path)
+                # print("Folder created successfully.")
 
-            continue
+            while count < 15:
+                ret, frame = video_capture.read()
 
-        capture_attempts = 0
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                if not ret:
+                    capture_attempts += 1
 
-        faces = face_detector.detectMultiScale(
-            gray,
-            scaleFactor=1.1,
-            minNeighbors=5,
-            minSize=(30, 30),
-            flags=cv2.FONT_HERSHEY_SIMPLEX
-        )
+                    if capture_attempts > max_capture_attempts:
+                        # print("Error: Maximum capture attempts reached")
+                        break
 
-        for (x, y, w, h) in faces:
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            count += 1
+                    continue
 
-            cv2.imwrite(f"dataset/{year}/{department}/{classr}/{admissionNo}/{name}.{count}.jpg", gray[y:y + h, x:x + w])
+                capture_attempts = 0
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        cv2.imshow('Video', frame)
+                faces = face_detector.detectMultiScale(
+                    gray,
+                    scaleFactor=1.1,
+                    minNeighbors=5,
+                    minSize=(30, 30),
+                    flags=cv2.FONT_HERSHEY_SIMPLEX
+                )
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+                for (x, y, w, h) in faces:
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                    count += 1
 
-        if cv2.waitKey(100) == 27:
-            break
+                    cv2.imwrite(f"dataset/{year1}/{department}/{classr}/{admissionNo}/{name}.{count}.jpg",
+                                gray[y:y + h, x:x + w])
 
-    video_capture.release()
-    cv2.destroyAllWindows()
+                cv2.imshow('Video', frame)
 
-    if count == 15:
-        return 'Training complete'
-    else:
-        return 'Training incomplete'
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+
+                if cv2.waitKey(100) == 27:
+                    break
+
+            video_capture.release()
+            cv2.destroyAllWindows()
+
+            if count == 15:
+                # Insert student details into the students table
+                year = ""
+                if(year1 == "First Year"):
+                    year = "1"
+                elif(year1 == "Second Year"):
+                    year = "2"
+                elif(year1 == "Third Year"):
+                    year = "3"
+                else:
+                    year = "4"
+                with mysql.connection.cursor() as cursor:
+                    insert_query = "INSERT INTO students (ad_no, cl_id, name, Age, Gender, dept_id, Year) " \
+                                   "VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                    student_data = (admissionNo, cl_id, name, age, gender, dept_id, year)
+                    cursor.execute(insert_query, student_data)
+                    mysql.connection.commit()
+
+                return 'Training complete'
+            else:
+                return 'Training incomplete'
+        else:
+            return 'Class or department not found'
 
 
 @app.errorhandler(500)
@@ -171,7 +207,7 @@ def capture():
 def recognize():
     test_image_path = request.args.get('file_name')
     # test_image_path = "20230610_140123.jpg"
-    # test_image_path = "20230610_141433.jpg"
+    # test_image_path = "20230614_104210.jpg"
     department = request.args.get('department')
     year = request.args.get('year')
     class_ = request.args.get('class_')
@@ -299,10 +335,13 @@ def navigateToDashboard():
 
         result = cursor.fetchone()
 
-        absent_count = result[1]
-        present_percentage = result[2]
-        present_percentage = int(present_percentage)
-        # print('workingggggg')
+        if result:
+            absent_count = result[1]
+            present_percentage = result[2]
+            present_percentage = int(present_percentage)
+        else:
+            absent_count = 0
+            present_percentage = 0
     else:
         absent_count = 0
         present_percentage = 0
@@ -312,19 +351,14 @@ def navigateToDashboard():
     return render_template('teacher/teacherDashboard.html', username=username, teacherName=teacherName,
                            absent_count=absent_count, present_percentage=present_percentage)
 
+
 ####################################################################################################################################
                                                                 # DATABASE
 
-
-app.secret_key = '1222'
-
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'ipts'
-mysql = MySQL(app)
-
-# Test connection
+@app.route('/clearSession')
+def clearSession():
+    session.clear()
+    render_template('teacher/teacherLogin.html')
 @app.route('/testconnection')
 def test_connection():
     try:
@@ -351,11 +385,12 @@ def login():
         if user:
             session['username'] = user[0]
             session['teacherName'] = user[1]
-            #print("user = ", user[1])
+            print("user = ", user[1])
             return redirect('/navigateToDashboard')
         else:
+            # print("hmmmmmmm")
             error = 'Invalid credentials. Please try again.'
-            return render_template('login.html', error=error)
+            return render_template('teacher/teacherLogin.html', error=error)
     
     return render_template('login.html')
 

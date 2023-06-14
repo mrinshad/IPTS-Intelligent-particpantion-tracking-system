@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Teacher Attendance Dashboard</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <style>
     body {
-      padding-top: 70px; /* Add top padding to make space for the fixed navbar */
+      background-image: url(../static/unnamed.jpg);
+      background-size: cover;
+      padding-top: 70px;
     }
 
     .navbar {
       display: flex;
-      justify-content: center; /* Align items horizontally at the center */
+      justify-content: center;
+      /* Align items horizontally at the center */
     }
 
     .container {
-      margin-top: 20px; /* Add top margin to create space below the navbar */
+      margin-top: 20px;
+      /* Add top margin to create space below the navbar */
     }
 
     .logout-btn {
@@ -56,10 +61,12 @@
     }
   </script>
 </head>
+
 <body>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="#">Attendance Dashboard</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
@@ -78,20 +85,20 @@
             <button type="submit" class="nav-link btn logout-btn">Logout</button>
           </form>
         </li>
-        
+
       </ul>
     </div>
   </nav>
-  
+
   <div class="container">
     <div class="row">
       <div class="col-md-6">
         <h2>Welcome, {{ teacherName }} Teacher</h2>
         <p>Here, you can manage the attendance of your students.</p>
         {% if 'att_id' in session %}
-          <button class="btn btn-primary mark-attendance-btn" disabled>Attendance Marked</button>
+        <button class="btn btn-primary mark-attendance-btn" disabled>Attendance Marked</button>
         {% else %}
-          <a class="btn btn-primary mark-attendance-btn" href="/teacherSelectClass">Mark Attendance</a>
+        <a class="btn btn-primary mark-attendance-btn" href="/teacherSelectClass">Mark Attendance</a>
         {% endif %}
       </div>
       <div class="col-md-6">
@@ -99,17 +106,17 @@
           <div class="card-header">Attendance Statistics</div>
           <div class="card-body">
             {% if session['att_id'] %}
-              <p>Today's Attendance: {{ present_percentage }}%</p>
-              <p>Recent Absences: {{ absent_count }}</p>
+            <p>Today's Attendance: {{ present_percentage }}%</p>
+            <p>Recent Absences: {{ absent_count }}</p>
             {% else %}
-              <p>Attendance not marked</p>
+            <p>Attendance not marked</p>
             {% endif %}
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -117,4 +124,5 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
 </body>
+
 </html>
