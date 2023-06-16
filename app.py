@@ -153,6 +153,8 @@ def train_page():
 def train_faces():
     return render_template('admin/train.html')
 
+import json
+
 @app.route('/train', methods=['GET', 'POST'])
 def train():
     if request.method == 'POST':
@@ -163,9 +165,27 @@ def train():
         department = request.form.get('department')
         year = request.form.get('year')
         classr = request.form.get('division')
-        id = train_face(name,admissionNo,age,gender,department,year,classr)
-        #print("Face trained with name =", request.form.get('name')," and admission number = ",request.form.get('admission-no'))
-        return render_template('admin/train.html')
+
+        result = train_face(name, admissionNo, age, gender, department, year, classr)
+
+        if result == 'Training complete':
+            response = {
+                'status': 'success',
+                'message': 'Training complete!'
+            }
+        elif result == 'Training incomplete':
+            response = {
+                'status': 'warning',
+                'message': 'Training incomplete. Please try again.'
+            }
+        else:
+            response = {
+                'status': 'danger',
+                'message': 'Class or department not found.'
+            }
+
+        return json.dumps(response)
+
 
 @app.route('/teacherSelectClass')
 def teacherSelectClass():

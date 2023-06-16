@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 11, 2023 at 09:46 PM
+-- Generation Time: Jun 16, 2023 at 06:20 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -42,14 +42,10 @@ CREATE TABLE `attendance` (
 --
 
 INSERT INTO `attendance` (`id`, `att_id`, `dept_tid`, `cl_id`, `year`, `ad_no`, `att_status`) VALUES
-(0, '19f53486-e5c7-4627-a774-6b0957', '2', 'ce04', 2, 'l21ds006', 1),
-(0, '19f53486-e5c7-4627-a774-6b0957', '2', 'ce04', 2, 'l21ds008', 1),
-(0, '19f53486-e5c7-4627-a774-6b0957', '2', 'ce04', 2, 'l21ds009', 1),
-(0, '19f53486-e5c7-4627-a774-6b0957', '2', 'ce04', 2, 'l21ds007', 1),
-(0, 'f1500567-d725-4c93-90be-73017d', '2', 'ce04', 2, 'l21ds006', 1),
-(0, 'f1500567-d725-4c93-90be-73017d', '2', 'ce04', 2, 'l21ds008', 1),
-(0, 'f1500567-d725-4c93-90be-73017d', '2', 'ce04', 2, 'l21ds009', 1),
-(0, 'f1500567-d725-4c93-90be-73017d', '2', 'ce04', 2, 'l21ds007', 1);
+(41, '13', '1', 'cs07', 3, 'L21ds008', 1),
+(42, '13', '1', 'cs07', 3, 'b20ds060', 1),
+(43, '13', '1', 'cs07', 3, 'b20ds017', 1),
+(44, '13', '1', 'cs07', 3, 'l21ds003', 0);
 
 -- --------------------------------------------------------
 
@@ -58,7 +54,7 @@ INSERT INTO `attendance` (`id`, `att_id`, `dept_tid`, `cl_id`, `year`, `ad_no`, 
 --
 
 CREATE TABLE `attendance_record` (
-  `att_id` varchar(30) NOT NULL,
+  `att_id` int(30) NOT NULL,
   `date` date NOT NULL,
   `year` int(30) NOT NULL,
   `dept_id` varchar(30) NOT NULL,
@@ -71,10 +67,7 @@ CREATE TABLE `attendance_record` (
 --
 
 INSERT INTO `attendance_record` (`att_id`, `date`, `year`, `dept_id`, `cl_id`, `teacher_id`) VALUES
-('517acbd6-ee3c-4237-b35e-d2997c', '2023-06-12', 2, '2', 'ce04', '1'),
-('edaad326-1d73-42a4-b136-a7ecf5', '2023-06-12', 2, '2', 'ce04', '1'),
-('19f53486-e5c7-4627-a774-6b0957', '2023-06-12', 2, '2', 'ce04', '1'),
-('f1500567-d725-4c93-90be-73017d', '2023-06-12', 2, '2', 'ce04', '1');
+(13, '2023-06-14', 3, '1', 'cs07', '1');
 
 -- --------------------------------------------------------
 
@@ -170,10 +163,10 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`StudentID`, `ad_no`, `cl_id`, `name`, `Age`, `Gender`, `dept_id`, `Year`) VALUES
-(1, 'l21ds008', 'ce04', 'mohammed rinshad p', 23, 'male', '2', 2),
-(2, 'l21ds007', 'ce04', 'Muralikrishna K S', 22, 'male', '2', 2),
-(3, 'l21ds009', 'ce04', 'Ashiq joju CJ', 22, 'male', '2', 2),
-(4, 'l21ds006', 'ce04', 'ARAVIND.R', 23, 'male', '2', 2);
+(1023, 'L21ds008', 'cs02', 'Rinshad', 23, 'male', '1', 3),
+(1024, 'b20ds060', 'cs02', 'Irshad', 22, 'male', '1', 3),
+(1025, 'l21ds003', 'cs02', 'Subin', 22, 'male', '1', 3),
+(1027, 'b20ds017', 'cs02', 'Thayyib', 23, 'male', '1', 3);
 
 -- --------------------------------------------------------
 
@@ -205,6 +198,18 @@ INSERT INTO `teachers` (`teacher_id`, `name`, `username`, `password`, `major`) V
 --
 
 --
+-- Indexes for table `attendance`
+--
+ALTER TABLE `attendance`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `attendance_record`
+--
+ALTER TABLE `attendance_record`
+  ADD PRIMARY KEY (`att_id`);
+
+--
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
@@ -221,10 +226,22 @@ ALTER TABLE `teachers`
 --
 
 --
+-- AUTO_INCREMENT for table `attendance`
+--
+ALTER TABLE `attendance`
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT for table `attendance_record`
+--
+ALTER TABLE `attendance_record`
+  MODIFY `att_id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `StudentID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1021;
+  MODIFY `StudentID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1028;
 
 --
 -- AUTO_INCREMENT for table `teachers`
