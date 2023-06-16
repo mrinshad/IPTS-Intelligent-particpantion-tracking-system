@@ -119,7 +119,9 @@ def train_face(name, admissionNo, age, gender, department, year1, classr):
                     cursor.execute(insert_query, student_data)
                     mysql.connection.commit()
 
-                return 'Training complete'
+                alert_message = "Training complete"
+                alert_script = f"alert('{alert_message}');"
+                return f'<script>{alert_script}</script>'
             else:
                 return 'Training incomplete'
         else:
@@ -388,7 +390,6 @@ def login():
             print("user = ", user[1])
             return redirect('/navigateToDashboard')
         else:
-            # print("hmmmmmmm")
             error = 'Invalid credentials. Please try again.'
             return render_template('teacher/teacherLogin.html', error=error)
     
