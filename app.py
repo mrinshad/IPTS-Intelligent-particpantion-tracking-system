@@ -3,15 +3,12 @@ import sys
 import numpy as np
 from PIL import Image
 import os
-from flask import Flask, render_template, request, Response, jsonify, redirect, url_for,session,flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for,session,flash
 from flask_mysqldb import MySQL
 import base64
 import datetime
 import face_recognition
-import csv
-import glob
 from datetime import date
-import uuid
 
 face_detector = cv2.CascadeClassifier('Cascades/haarcascade_frontalface_default.xml')
 video_capture = cv2.VideoCapture(0)
@@ -165,26 +162,9 @@ def train():
         department = request.form.get('department')
         year = request.form.get('year')
         classr = request.form.get('division')
-
-        result = train_face(name, admissionNo, age, gender, department, year, classr)
-
-        if result == 'Training complete':
-            response = {
-                'status': 'success',
-                'message': 'Training complete!'
-            }
-        elif result == 'Training incomplete':
-            response = {
-                'status': 'warning',
-                'message': 'Training incomplete. Please try again.'
-            }
-        else:
-            response = {
-                'status': 'danger',
-                'message': 'Class or department not found.'
-            }
-
-        return json.dumps(response)
+        id = train_face(name,admissionNo,age,gender,department,year,classr)
+        #print("Face trained with name =", request.form.get('name')," and admission number = ",request.form.get('admission-no'))
+        return render_template('admin/train.html')
 
 
 @app.route('/teacherSelectClass')
@@ -603,4 +583,4 @@ def updateAttendance():
 
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True)

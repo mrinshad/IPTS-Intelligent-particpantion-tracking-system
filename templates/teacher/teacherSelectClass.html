@@ -43,14 +43,17 @@
           <a class="nav-link" href="#">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">View Students</a>
+          <a class="nav-link" href="navigateToViewStudents">View Attendance</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="#">Status</a>
-        </li>
+        </li> -->
         <li class="nav-item">
-          <a class="nav-link btn logout-btn" href="#">Logout</a>
+          <form action="/logout-teacher" method="POST">
+            <button type="submit" class="nav-link btn logout-btn">Logout</button>
+          </form>
         </li>
+
       </ul>
     </div>
   </nav>
